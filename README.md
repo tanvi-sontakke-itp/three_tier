@@ -1,9 +1,15 @@
-#Three-Tier Architecture in Azure
+**Three Tier Architecture in Azure**
 
-Security Implemented:
-- NSGs: internet -> HTTP, internet -> HTTPS with the help of certificates to encrypt traffic. the cert ensures that the server can be trusted. tls handshake needs the cert. 
-- backend nsgs (app gateway -> port 3000, backend -> postgresql, block internet ->vmss)
-- ensure vmss access internet via nat
-- postgresql not publicly accessible and is accessed using a priv endpt
-- added jet auth to protect api (prevent unauthorized api requests, protect db operations) -> ensure that only authenticated and authorized clients can access protected tokens using a cryptographically signed token. client sends the JWT in the Authorization: Bearer <token> header for each request. API server verifies the token’s signature and verifies the token integrity then grants access.
-- sql queries use parameterized statements preventing SQLi
+This project provisions a secure, production-style three-tier architecture on Microsoft Azure using Terraform Infrastructure as Code (IaC). The architecture follows cloud security best practices, implements defense-in-depth, and demonstrates secure networking, private database connectivity, and scalable application infrastructure.
+
+The system consists of:
+
+1. Frontend Layer: Azure Application Gateway with Web Application Firewall (WAF)
+2. Application Layer: Virtual Machine Scale Set (VMSS) running a Node.js backend
+3. Data Layer: Azure PostgreSQL Flexible Server accessed through a Private Endpoint
+4. Networking Layer: Virtual Network with segmented subnets, NSGs, NAT Gateway
+5. Security & Secrets: Azure Key Vault
+6. DNS: Public DNS for frontend access and Private DNS for database resolution
+7. Storage: Azure Storage Account for blob storage
+
+The deployment is fully automated using Terraform modules.
