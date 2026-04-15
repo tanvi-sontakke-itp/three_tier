@@ -1,40 +1,41 @@
 resource "azurerm_linux_virtual_machine_scale_set" "backend_vmss" {
 
-  name                            = var.name
-  location                        = var.location
-  resource_group_name             = var.resource_group
-  sku                             = "Standard_B2s"
-  instances                       = 2
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.resource_group
+
+  sku       = var.vmss_sku
+  instances = var.instances
+
   admin_username                  = var.vm_username
-  admin_password                  = var.vm_password // use managed identity and fetch the secret at runtime inside the VM
-  disable_password_authentication = false
+  admin_password                  = var.vm_password
+  disable_password_authentication = var.disable_password_authentication
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts"
-    version   = "latest"
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   }
 
   os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
+    caching              = var.os_disk_caching
+    storage_account_type = var.os_disk_storage_account_type
   }
 
   network_interface {
-    name    = "backend-nic"
+    name    = var.nic_name
     primary = true
 
     ip_configuration {
-      name      = "internal"
+      name      = var.ip_config_name
       subnet_id = var.subnet_id
       primary   = true
 
-      // connet the vmss nic to the app gateway backend pool
+      // connect vmss to appln gateway
       application_gateway_backend_address_pool_ids = [
         var.backend_pool_id
       ]
-
     }
   }
 }

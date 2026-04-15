@@ -1,11 +1,32 @@
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
+const authenticateToken = require("./authMiddleware");
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
+
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// JWT is created 
+// middleware protects the routes everywhere
+app.post("/login", (req, res) => {
+
+  const { username } = req.body;
+
+  const user = { username };
+
+  const token = jwt.sign(user, process.env.JWT_SECRET, {
+    expiresIn: "1h"
+  });
+
+  res.json({ token });
+
+});
 
 // root route
 app.get("/", (req, res) => {
@@ -13,8 +34,8 @@ app.get("/", (req, res) => {
 });
 
 
-// READ all students
-app.get("/students", async (req, res) => {
+// READ all students (protected)
+app.get("/students", authenticateToken, async (req, res) => {
   try {
 
     const result = await pool.query("SELECT * FROM students");
@@ -24,14 +45,14 @@ app.get("/students", async (req, res) => {
   } catch (err) {
 
     console.error("READ ERROR:", err);
-    // res.status(500).send("Database error");
+    res.status(500).send("Database error");
 
   }
 });
 
 
-// CREATE student
-app.post("/students", async (req, res) => {
+// CREATE student (protected)
+app.post("/students", authenticateToken, async (req, res) => {
 
   const { name, email, department, year } = req.body;
 
@@ -54,8 +75,8 @@ app.post("/students", async (req, res) => {
 });
 
 
-// UPDATE student
-app.put("/students/:id", async (req, res) => {
+// UPDATE student (protected)
+app.put("/students/:id", authenticateToken, async (req, res) => {
 
   const { name, email, department, year } = req.body;
   const id = req.params.id;
@@ -79,8 +100,8 @@ app.put("/students/:id", async (req, res) => {
 });
 
 
-// DELETE student
-app.delete("/students/:id", async (req, res) => {
+// DELETE student (protected)
+app.delete("/students/:id", authenticateToken, async (req, res) => {
 
   const id = req.params.id;
 
@@ -106,3 +127,6 @@ app.delete("/students/:id", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
+
+// the code already prevents SQLi. it uses parameterized queries.

@@ -1,20 +1,30 @@
 locals {
-  location = "East US2"
-  network_security_rules = [
+
+  application_gateway_security_rules = [
     {
       name                   = "AllowHTTP"
       priority               = 100
       destination_port_range = "80"
+      source                 = "Internet"
     },
     {
       name                   = "AllowHTTPS"
       priority               = 110
       destination_port_range = "443"
+      source                 = "Internet"
     },
     {
-      name                   = "AllowAppGatewayHealthProbe"
+      name                   = "AllowAppGatewayInfrastructure"
       priority               = 120
       destination_port_range = "65200-65535"
+      source                 = "GatewayManager"
+    },
+    {
+      name                   = "AllowAzureLoadBalancer"
+      priority               = 130
+      destination_port_range = "*"
+      source                 = "AzureLoadBalancer"
     }
   ]
+
 }

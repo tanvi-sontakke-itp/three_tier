@@ -24,3 +24,11 @@ variable "resource_group" {
 variable "tags" {
   type = map(string)
 }
+
+variable "nat_alloc_method" {
+  type = string
+}
+
+variable "nat_sku" {
+  type = string
+}

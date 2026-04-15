@@ -2,15 +2,15 @@ resource "azurerm_public_ip" "nat_public_ip" {
   name                = var.nat_public_ip_name
   location            = var.location
   resource_group_name = var.resource_group
-  allocation_method   = "Static"
-  sku                 = "Standard"
+  allocation_method   = var.nat_alloc_method
+  sku                 = var.nat_sku
 }
 
 resource "azurerm_nat_gateway" "nat_gateway" {
   name                    = var.nat_name
   location                = var.location
   resource_group_name     = var.resource_group
-  sku_name                = "Standard"
+  sku_name                = var.nat_sku
   idle_timeout_in_minutes = 4
 }
 

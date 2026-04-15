@@ -1,7 +1,3 @@
-variable "nsg_name" {
-  type = string
-}
-
 variable "location" {
   type = string
 }
@@ -15,5 +11,25 @@ variable "tags" {
 }
 
 variable "application_gateway_subnet_id" {
+  type = string
+}
+
+variable "backend_subnet_id" {
+  type = string
+}
+
+variable "appgw_nsg_name" {
+  type = string
+}
+
+variable "vmss_nsg_name" {
+  type = string
+}
+
+variable "db_nsg_name" {
+  type = string
+}
+
+variable "appgw_subnet_cidr" {
   type = string
 }

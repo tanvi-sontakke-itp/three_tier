@@ -5,12 +5,12 @@
 # }
 
 resource "azurerm_dns_zone" "public_dns" {
-  name                = "threetier.tech"
+  name                = var.public_dns_zone_name
   resource_group_name = var.resource_group
 }
 
 resource "azurerm_dns_a_record" "tanvi_a_record" {
-  name                = "tanvi"
+  name                = var.A_record_name
   zone_name           = azurerm_dns_zone.public_dns.name
   resource_group_name = var.resource_group
   ttl                 = 300

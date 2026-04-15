@@ -1,5 +1,7 @@
 # Local .terraform directories
 .terraform/
+notes.txt
+.env
 
 # .tfstate files
 *.tfstate
